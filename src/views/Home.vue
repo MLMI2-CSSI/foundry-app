@@ -44,9 +44,9 @@
     <v-row class="indigo lighten-4 pt-3 px-md-10 px-1">
       <h1 class="col-md-10 col-12 mx-auto">We make collaboration and reuse easy</h1>
       <v-row class="mb-5 col-md-10 col-12 mx-auto">
-        <div class="col-sm-10 col-md-6 col-12 mx-auto">
-          <vue-code-highlight language="python">
-            <pre class="language-python">
+        <div class="col-sm-10 col-md-6 col-12 mx-auto overflow-x-hidden">
+          <vue-code-highlight language="python" class="overflow-x-hidden">
+            <pre class="overflow-x-hidden language-python">
 
 f = f.load("foundry_stan_segmentation_v1.1")
 X,y = f.load_data()
