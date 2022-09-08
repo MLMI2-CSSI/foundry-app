@@ -48,7 +48,7 @@
           <vue-code-highlight language="python">
             <pre class="language-python">
 
-f = f.load("foundry_stan_segmentation_v1.1")           
+f = f.load("foundry_stan_segmentation_v1.1")
 X,y = f.load_data()
 </pre>
           </vue-code-highlight>
