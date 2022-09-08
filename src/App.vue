@@ -101,3 +101,15 @@ export default {
   }),
 }
 </script>
+
+<style>
+.scroll-fix::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scroll-fix {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>
