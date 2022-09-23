@@ -15,7 +15,7 @@
                     <v-row>
 
                         <v-card elevation="3" outlined class="mx-auto col-md-5 col-12 my-6" v-for="item in filteredList"
-                        v-bind:key="item.title" v-bind:to="item.to" link>
+                            v-bind:key="item.title" v-bind:to="item.to" link>
                             <v-card-title class="white-text" style="word-break: keep-all;">{{ item.title }}
                             </v-card-title>
                             <v-card-text>
@@ -58,6 +58,16 @@
 <!-- This is where the dataset data will be loaded and put into the cards -->
 <script>
 import axios from 'axios';
+
+class Item {
+    constructor(title, foundry, dc, authors, to) {
+        this.title = title;
+        this.foundry = foundry;
+        this.dc = dc;
+        this.authors = authors;
+        this.to = to;
+    }
+}
 
 export default {
     mounted() {
@@ -141,7 +151,7 @@ export default {
         search: '',
         computed: {
             filteredList() {
-                return this.items.filter(post => {
+                return this.items.filter(item => {
                     return item.title.toLowerCase().includes(this.search.toLowerCase())
                 })
             }
