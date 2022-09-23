@@ -5,39 +5,19 @@
                 <h1 class="mx-6 mt-6">Datasets</h1>
             </v-row>
             <v-row>
-                <!-- <v-col class="col-md-3 col-12">
-                    <v-card class="mx-auto">
-                        <v-toolbar color="red lighten-3" dark>
-                            <v-toolbar-title>Topics</v-toolbar-title>
-                            <v-spacer></v-spacer>
-                        </v-toolbar>
-                        <v-list>
-                            <v-list-group v-for="term in searchTerms" :key="term.title" v-model="term.active"
-                                :prepend-icon="term.icon" no-action>
-                                <template v-slot:activator>
-                                    <v-list-item-content>
-                                        <v-list-item-title v-text="term.title"></v-list-item-title>
-                                    </v-list-item-content>
-                                </template>
-
-                                <v-list-item v-for="child in term.subterms" :key="child.title">
-                                    <v-list-item-action>
-                                        <v-checkbox color="indigo lighten-3"></v-checkbox>
-                                    </v-list-item-action>
-                                    <v-list-item-content>
-                                        <v-list-item-title v-text="child.title"></v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-list-group>
-                        </v-list>
-                    </v-card>
-                </v-col> -->
+                <div class="search-wrapper">
+                    <input type="text" v-model="search" placeholder="Search title.." />
+                    <label>Search title:</label>
+                </div>
+            </v-row>
+            <v-row>
                 <v-col>
                     <v-row>
 
-                        <v-card elevation="3"  outlined class="mx-auto col-md-5 col-12 my-6"
-                            v-for="item in items" :key="item.title" :to="item.to" link>
-                            <v-card-title class="white-text" style="word-break: keep-all;">{{ item.title }}</v-card-title>
+                        <v-card elevation="3" outlined class="mx-auto col-md-5 col-12 my-6" v-for="item in filteredList"
+                        v-bind:key="item.title" v-bind:to="item.to" link>
+                            <v-card-title class="white-text" style="word-break: keep-all;">{{ item.title }}
+                            </v-card-title>
                             <v-card-text>
                                 <div class="font-weight-medium">
                                     <span v-for="(author, index) in item.authors" :key="author">
@@ -45,24 +25,24 @@
                                     </span>
                                 </div>
                                 <div class="font-weight-medium">
-                                    DOI: {{item.dc.identifier.identifier}}
+                                    DOI: {{ item.dc.identifier.identifier }}
                                 </div>
-                                
+
                                 <div>
                                     <v-chip class="ma-2" color="blue lighten-1" text-color="white">
                                         {{ item.foundry.data_type }}
                                     </v-chip>
-                                   
+
                                     <v-chip class="ma-2" color="red lighten-2" text-color="white">
                                         {{ item.foundry.task_type[0] }}
                                     </v-chip>
-                                     <v-chip class="ma-2" color="indigo lighten-3" text-color="white">
+                                    <v-chip class="ma-2" color="indigo lighten-3" text-color="white">
                                         {{ item.foundry.n_items }} Items
                                     </v-chip>
                                 </div>
 
 
-                               
+
 
                             </v-card-text>
                         </v-card>
@@ -158,47 +138,14 @@ export default {
         drawer: null,
         items: [],
         facets: { "tags": [] },
-        searchTerms: [
-            {
-                icon: 'mdi-beaker-outline',
-                subterms: [{ title: 'this one' }, { title: 'that one' }],
-                title: 'Domain',
-            },
-            {
-                icon: 'mdi-run',
-                subterms: [
-                    { title: 'Classification' },
-                    { title: 'Generation' },
-                    { title: 'Sushi' },
-                ],
-                title: 'Task',
-            },
-            {
-                icon: 'mdi-chart-bar',
-                subterms: [{ title: 'List Item' }],
-                title: 'Data Type',
-            },
-            {
-                icon: 'mdi-file-document',
-                subterms: [{ title: 'List Item' }],
-                title: 'Data License',
-            },
-            {
-                icon: 'mdi-weight-kilogram',
-                subterms: [{ title: 'List Item' }],
-                title: 'Size',
-            },
-            {
-                icon: 'mdi-emoticon-neutral',
-                subterms: [{ title: 'List Item' }],
-                title: 'Mood',
-            },
-            {
-                icon: 'mdi-emoticon-cool',
-                subterms: [{ title: 'List Item' }],
-                title: 'Vibe',
-            },
-        ],
+        search: '',
+        computed: {
+            filteredList() {
+                return this.items.filter(post => {
+                    return item.title.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }
+        }
     }),
 }
 </script>

@@ -69,27 +69,30 @@ res = f.load_data(globus=False)
                      
  </pre>
                     </vue-code-highlight>
+                    <v-row >
 
-                    <p>You can load this dataset with 2 lines of code if you already have Foundry set up. If you need to
-                        set up Foundry, check out our <a class="red--text text--lighten-3"
-                            href="https://github.com/MLMI2-CSSI/foundry/tree/main/examples" target="blank">example
-                            notebooks</a> and <a class="red--text text--lighten-3"
-                            href="https://ai-materials-and-chemistry.gitbook.io/foundry/v/docs/"
-                            target="blank">documentation</a> for how to get started.</p>
-                    <v-alert dense border="left" type="info" color="indigo lighten-2">
+                        <p class="col-md-6 col-12">You can load this dataset with 2 lines of code if you already have
+                            Foundry set up. If you need to
+                            set up Foundry, check out our <a class="red--text text--lighten-3"
+                                href="https://github.com/MLMI2-CSSI/foundry/tree/main/examples" target="blank">example
+                                notebooks</a> and <a class="red--text text--lighten-3"
+                                href="https://ai-materials-and-chemistry.gitbook.io/foundry/v/docs/"
+                                target="blank">documentation</a> for how to get started.</p>
+                        <a class="text-decoration-none mt-3 mx-auto" :href=dataset.data_info.link target="blank">
+                            <v-btn color="red lighten-2 white--text col-12 ">
+                                Get Data with Globus
+                            </v-btn>
+                        </a>
+                    </v-row>
+
+                    <v-alert dense border="left" type="info" color="indigo lighten-2" class="mt-6">
                         This code may change depending on whether or not you're using Globus. Look at our <a
                             class="red--text text--lighten-4"
                             href="https://ai-materials-and-chemistry.gitbook.io/foundry/examples#loading-datasets"
                             target="blank">documentation</a> to make sure you are set up properly.
                     </v-alert>
 
-                    <a class="text-decoration-none"
-            :href=dataset.data_info.link
-            target="blank">
-            <v-btn color="red lighten-2 white--text col-12 col-md-10 col-lg-8">
-              Get Data with Globus
-            </v-btn>
-          </a>
+
 
                 </div>
                 <div v-if="dataset.dc.descriptions">
@@ -157,8 +160,7 @@ res = f.load_data(globus=False)
                 </div>
                 <h2>Publications</h2>
                 <div class="pl-md-5 mb-10 mx-auto col-md-9 col-12">
-                    <v-card elevation="3" outlined class=" my-6"
-                        v-for="item in dataset.dc.titles" :key="item.title">
+                    <v-card elevation="3" outlined class=" my-6" v-for="item in dataset.dc.titles" :key="item.title">
                         <v-card-title style="word-break: keep-all;">{{ item.title }}</v-card-title>
                     </v-card>
                 </div>
