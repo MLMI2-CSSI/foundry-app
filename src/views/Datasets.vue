@@ -6,7 +6,7 @@
             </v-row>
             <v-row>
                 <div class="search-wrapper">
-                    <input type="text" v-model="search" placeholder="Search title.." />
+                    <input type="text" v-model="searchQuery" placeholder="Search title.." />
                     <label>Search title:</label>
                 </div>
             </v-row>
@@ -14,7 +14,7 @@
                 <v-col>
                     <v-row>
 
-                        <v-card elevation="3" outlined class="mx-auto col-md-5 col-12 my-6" v-for="item in filteredList"
+                        <v-card elevation="3" outlined class="mx-auto col-md-5 col-12 my-6" v-for="item in resultQuery"
                             v-bind:key="item.title" v-bind:to="item.to" link>
                             <v-card-title class="white-text" style="word-break: keep-all;">{{ item.title }}
                             </v-card-title>
@@ -59,15 +59,6 @@
 <script>
 import axios from 'axios';
 
-class Item {
-    constructor(title, foundry, dc, authors, to) {
-        this.title = title;
-        this.foundry = foundry;
-        this.dc = dc;
-        this.authors = authors;
-        this.to = to;
-    }
-}
 
 export default {
     mounted() {
@@ -146,15 +137,24 @@ export default {
     },
     data: () => ({
         drawer: null,
+        searchQuery: null,
         items: [],
         facets: { "tags": [] },
         search: '',
         computed: {
-            filteredList() {
-                return this.items.filter(item => {
-                    return item.title.toLowerCase().includes(this.search.toLowerCase())
-                })
+            resultQuery() {
+                if (this.searchQuery) {
+                    return this.items.filter(item => {
+                        return this.searchQuery
+                            .toLowerCase()
+                            .split(" ")
+                            .every(v => item.title.toLowerCase().includes(v));
+                    });
+                } else {
+                    return this.items;
+                }
             }
+
         }
     }),
 }
