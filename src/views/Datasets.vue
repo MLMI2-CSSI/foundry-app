@@ -70,7 +70,7 @@
 
                             </v-card-text>
                         </v-card>
-                        <v-card elevation="3" class="mx-auto col-md-5 col-12 my-6" v-if="filteredItemsLength === 0">
+                        <v-card elevation="3" class="mx-auto col-md-5 col-12 my-6" v-if="filteredItemsLength === 0 && loaded===true">
                             <v-card-title class="justify-center"  style="word-break: keep-all;">No Results Found</v-card-title>
                         </v-card>
                     </v-row>
@@ -157,6 +157,7 @@ export default {
                     "subterms": self.facets.tags,
                     "title": 'Tag',
                 })
+                self.loaded=true
 
 
             })
@@ -165,6 +166,7 @@ export default {
         drawer: null,
         items: [],
         input: "",
+        loaded: false,
         testCondition: false,
         facets: { "tags": [] },
         searchTerms: [
