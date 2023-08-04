@@ -4,6 +4,11 @@
             <v-row>
                 <h1 class="mx-6 mt-6">Datasets</h1>
             </v-row>
+            <v-row class="mx-6 mt-6">
+                <v-col>
+                    <v-text-field color="blue lighten-1" label="Search" placeholder="Search by title, doi, or author" v-model="input" outlined></v-text-field>
+                </v-col>
+            </v-row>
             <v-row>
                 <!-- <v-col class="col-md-3 col-12">
                     <v-card class="mx-auto">
@@ -34,9 +39,8 @@
                 </v-col> -->
                 <v-col>
                     <v-row>
-
                         <v-card elevation="3"  outlined class="mx-auto col-md-5 col-12 my-6"
-                            v-for="item in items" :key="item.title" :to="item.to" link>
+                            v-for="item in filteredItems" :key="item.title" :to="item.to" link>
                             <v-card-title class="white-text" style="word-break: keep-all;">{{ item.title }}</v-card-title>
                             <v-card-text>
                                 <div class="font-weight-medium">
@@ -65,6 +69,9 @@
                                
 
                             </v-card-text>
+                        </v-card>
+                        <v-card elevation="3" class="mx-auto col-md-5 col-12 my-6" v-if="filteredItemsLength === 0">
+                            <v-card-title class="justify-center"  style="word-break: keep-all;">No Results Found</v-card-title>
                         </v-card>
                     </v-row>
 
@@ -157,6 +164,8 @@ export default {
     data: () => ({
         drawer: null,
         items: [],
+        input: "",
+        testCondition: false,
         facets: { "tags": [] },
         searchTerms: [
             {
@@ -200,5 +209,19 @@ export default {
             },
         ],
     }),
+    computed: {
+        filteredItems(){
+            if(this.input === ""){
+                return this.items
+            }
+            return this.items.filter((item) => {
+                return item.title.toLowerCase().includes(this.input.toLowerCase()) || item.dc.identifier.identifier.toLowerCase().includes(this.input.toLowerCase()) || item.authors.map((author)=>author.toLowerCase()).filter((auth) => auth.includes(this.input.toLowerCase())).length != 0
+            })
+        },
+        filteredItemsLength(){
+            return this.filteredItems.length
+        }
+    }
 }
+//authors and DOI
 </script>
