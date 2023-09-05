@@ -9,6 +9,10 @@
                     <v-text-field color="blue lighten-1" label="Search" placeholder="Search by title, doi, or author" v-model="input" outlined></v-text-field>
                 </v-col>
             </v-row>
+            <v-row v-if="loaded===true">
+                <p class="mx-13 mt-n4 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
+            </v-row>
+            
             <v-row>
                 <!-- <v-col class="col-md-3 col-12">
                     <v-card class="mx-auto">
