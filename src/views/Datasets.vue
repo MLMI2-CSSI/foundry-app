@@ -10,9 +10,7 @@
                 </v-col>
             </v-row>
             <v-row v-if="loaded===true">
-                <div class="text-body-1">
                 <p class="mx-13 mt-n4 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
-                </div>
             </v-row>
             
             <v-row>
