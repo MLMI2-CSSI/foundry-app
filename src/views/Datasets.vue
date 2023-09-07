@@ -12,9 +12,9 @@
             <v-row v-if="loaded===true">
                 <p class="mx-13 mt-n4 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
             </v-row>
-            <v-row>
-                    <v-col cols="6" offset="3" class="d-flex justify-center align-center" v-if="testing===false">
-                        <h1 class="display-2"><i class="mdi mdi-dots-circle"></i></h1>
+            <v-row v-if="loaded===false" style="height: 60vh">
+                    <v-col cols="6" offset="3" class="d-flex justify-center align-center">
+                        <span class="blue--text text--lighten-1 display-4 mdi mdi-dots-circle"></span>
                     </v-col>
                 </v-row>
             
@@ -177,7 +177,6 @@ export default {
         items: [],
         input: "",
         loaded: false,
-        testing: false,
         testCondition: false,
         facets: { "tags": [] },
         searchTerms: [
@@ -241,8 +240,18 @@ export default {
 
 <style>
     .mdi-dots-circle {
-  animation: spin-animation 1s infinite;
-  animation-timing-function: linear;
-  color: red;
+        animation-name: spin;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
 }
 </style>
