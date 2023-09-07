@@ -13,10 +13,10 @@
                 <p class="mx-13 mt-n4 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
             </v-row>
             <v-row v-if="loaded===false" style="height: 60vh">
-                    <v-col cols="6" offset="3" class="d-flex justify-center align-center">
-                        <span class="blue--text text--lighten-1 display-4 mdi mdi-dots-circle"></span>
-                    </v-col>
-                </v-row>
+                <v-col cols="6" offset="3" class="d-flex justify-center align-center">
+                    <span class="blue--text text--lighten-1 display-4 mdi mdi-dots-circle"></span>
+                </v-col>
+            </v-row>
             
             <v-row>
                 
