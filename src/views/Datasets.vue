@@ -12,8 +12,14 @@
             <v-row v-if="loaded===true">
                 <p class="mx-13 mt-n4 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
             </v-row>
+            <v-row>
+                    <v-col cols="6" offset="3" class="d-flex justify-center align-center" v-if="testing===false">
+                        <h1 class="display-2"><i class="mdi mdi-dots-circle"></i></h1>
+                    </v-col>
+                </v-row>
             
             <v-row>
+                
                 <!-- <v-col class="col-md-3 col-12">
                     <v-card class="mx-auto">
                         <v-toolbar color="red lighten-3" dark>
@@ -171,6 +177,7 @@ export default {
         items: [],
         input: "",
         loaded: false,
+        testing: false,
         testCondition: false,
         facets: { "tags": [] },
         searchTerms: [
@@ -231,3 +238,11 @@ export default {
 }
 //authors and DOI
 </script>
+
+<style>
+    .mdi-dots-circle {
+  animation: spin-animation 1s infinite;
+  animation-timing-function: linear;
+  color: red;
+}
+</style>
