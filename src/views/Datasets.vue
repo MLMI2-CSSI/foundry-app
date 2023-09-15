@@ -12,8 +12,14 @@
             <v-row v-if="loaded===true">
                 <p class="mx-13 mt-n4 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
             </v-row>
+            <v-row v-if="loaded===false" style="height: 60vh">
+                <v-col cols="6" offset="3" class="d-flex justify-center align-center">
+                    <span class="blue--text text--lighten-1 display-4 mdi mdi-dots-circle"></span>
+                </v-col>
+            </v-row>
             
             <v-row>
+                
                 <!-- <v-col class="col-md-3 col-12">
                     <v-card class="mx-auto">
                         <v-toolbar color="red lighten-3" dark>
@@ -231,3 +237,21 @@ export default {
 }
 //authors and DOI
 </script>
+
+<style>
+    .mdi-dots-circle {
+        animation-name: spin;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+</style>

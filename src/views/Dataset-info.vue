@@ -1,6 +1,11 @@
 <template>
     <v-container>
-        <v-card>
+        <v-row v-if="loaded===false" style="height: 80vh">
+                <v-col cols="6" offset="3" class="d-flex justify-center align-center">
+                    <span class="blue--text text--lighten-1 display-4 mdi mdi-dots-circle"></span>
+                </v-col>
+            </v-row>
+        <v-card v-if="loaded===true">
             <div class="indigo lighten-2 pa-6">
                 <h1 class="white--text font-weight-medium">{{ dataset.title }}</h1>
                 <p class="subtitle-1 white--text font-weight-medium">
@@ -224,11 +229,13 @@ export default {
                     to: "/datasets/" + res.data.gmeta[0].entries[0].content.mdf.source_id,
                     data_info: res.data.gmeta[0].entries[0].content.data
                 }
-                console.log(self.dataset)
+                self.loaded=true
+                console.log(self.dataset, "dataset")
             })
     },
     data: () => ({
         drawer: null,
+        loaded: false,
         dataset: {},
         facets: { "tags": [] },
     }),
