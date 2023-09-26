@@ -11,17 +11,18 @@
             </v-row>
             <v-row class="mx-8 mt-n8">
                 <v-toolbar>
-                    <select v-model="yearsInput">
-                        <option disabled value="">Year</option>
-                        <option v-for="item in itemYears">
-                            {{ item }}
-                        </option>
-                    </select>
+                    <div  v-for="year in itemYears" class="mx-3">
+                        <!-- <input type="checkbox" v-bind:id="year" class="mx-1">
+                        <label v-bind:for="year">{{ year }}</label> -->
+                        <v-checkbox v-bind:label="year" v-bind:value="year" v-model="yearsInput">
+
+                        </v-checkbox>
+                    </div>
+                    
                 </v-toolbar>
                 <div>{{ yearsInput }}</div>
             </v-row>
             <v-row v-if="loaded===true">
-                <p>{{ itemYears }}</p>
                 <p class="mx-13 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
             </v-row>
             
@@ -189,7 +190,7 @@ export default {
         drawer: null,
         items: [],
         input: "",
-        yearsInput: "",
+        yearsInput: [],
         loaded: false,
         testCondition: false,
         facets: { "tags": [] },
@@ -252,7 +253,7 @@ export default {
                     return item.dc.dates[0].date.slice(0,4)
                 }).filter(function (value, index, arr) {
                     return index == arr.indexOf(value);
-                });
+                }).sort();
             
         }
     }
