@@ -9,9 +9,22 @@
                     <v-text-field color="blue lighten-1" label="Search" placeholder="Search by title, doi, or author" v-model="input" outlined></v-text-field>
                 </v-col>
             </v-row>
-            <v-row v-if="loaded===true">
-                <p class="mx-13 mt-n4 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
+            <v-row class="mx-8 mt-n8">
+                <v-toolbar>
+                    <select v-model="yearsInput">
+                        <option disabled value="">Year</option>
+                        <option v-for="item in itemYears">
+                            {{ item }}
+                        </option>
+                    </select>
+                </v-toolbar>
+                <div>{{ yearsInput }}</div>
             </v-row>
+            <v-row v-if="loaded===true">
+                <p>{{ itemYears }}</p>
+                <p class="mx-13 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
+            </v-row>
+            
             <v-row v-if="loaded===false" style="height: 60vh">
                 <v-col cols="6" offset="3" class="d-flex justify-center align-center">
                     <span class="blue--text text--lighten-1 display-4 mdi mdi-dots-circle"></span>
@@ -176,6 +189,7 @@ export default {
         drawer: null,
         items: [],
         input: "",
+        yearsInput: "",
         loaded: false,
         testCondition: false,
         facets: { "tags": [] },
@@ -232,6 +246,14 @@ export default {
         },
         filteredItemsLength(){
             return this.filteredItems.length
+        },
+        itemYears(){
+            return this.items.map((item) => {
+                    return item.dc.dates[0].date.slice(0,4)
+                }).filter(function (value, index, arr) {
+                    return index == arr.indexOf(value);
+                });
+            
         }
     }
 }
