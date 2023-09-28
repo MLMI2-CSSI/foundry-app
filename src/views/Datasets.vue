@@ -9,18 +9,21 @@
                     <v-text-field color="blue lighten-1" label="Search" placeholder="Search by title, doi, or author" v-model="input" outlined></v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="mx-8 mt-n8">
+            <v-row class="mx-10 mt-n8">
                 <v-toolbar>
-                    <div  v-for="year in itemYears" class="mx-3">
-                        <!-- <input type="checkbox" v-bind:id="year" class="mx-1">
-                        <label v-bind:for="year">{{ year }}</label> -->
-                        <v-checkbox v-bind:label="year" v-bind:value="year" v-model="yearsInput">
-
-                        </v-checkbox>
+                    <div class="d-flex flex-column">
+                        <p class="mb-0 pt-4 mx-3">
+                            Years
+                        </p>
+                        <div class="d-flex flex-row">
+                        <div  v-for="year in itemYears" class="mx-3">
+                            <v-checkbox v-bind:label="year" v-bind:value="year" v-model="yearsInput">
+                            </v-checkbox>
+                        </div>
+                        </div>
                     </div>
                     
                 </v-toolbar>
-                <div>{{ yearsInput }}</div>
             </v-row>
             <v-row v-if="loaded===true">
                 <p class="mx-13 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
@@ -190,7 +193,7 @@ export default {
         drawer: null,
         items: [],
         input: "",
-        yearsInput: [],
+        yearsInput: ["2021", "2022", "2023"],
         loaded: false,
         testCondition: false,
         facets: { "tags": [] },
@@ -239,10 +242,12 @@ export default {
     computed: {
         filteredItems(){
             if(this.input === ""){
-                return this.items
+                return this.items.filter((item) => {
+                    return this.yearsInputComputed.includes(item.dc.dates[0].date.slice(0,4))
+                })
             }
             return this.items.filter((item) => {
-                return item.title.toLowerCase().includes(this.input.toLowerCase()) || item.dc.identifier.identifier.toLowerCase().includes(this.input.toLowerCase()) || item.authors.map((author)=>author.toLowerCase()).filter((auth) => auth.includes(this.input.toLowerCase())).length != 0
+                return (item.title.toLowerCase().includes(this.input.toLowerCase()) || item.dc.identifier.identifier.toLowerCase().includes(this.input.toLowerCase()) || item.authors.map((author)=>author.toLowerCase()).filter((auth) => auth.includes(this.input.toLowerCase())).length != 0) && this.yearsInputComputed.includes(item.dc.dates[0].date.slice(0,4))
             })
         },
         filteredItemsLength(){
@@ -255,6 +260,9 @@ export default {
                     return index == arr.indexOf(value);
                 }).sort();
             
+        },
+        yearsInputComputed(){
+            return this.yearsInput
         }
     }
 }
