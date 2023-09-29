@@ -113,8 +113,8 @@ res = f.load_data()
                 </div>
                 <h2 class="mt-6 mb-2">Metadata associated with this dataset</h2>
                 <div class="pl-md-5">
-                    <h3>Keys</h3>
-                    <v-simple-table dense class="col-12">
+                    <h3 v-if="inputFilter.length>0">Input Keys</h3>
+                    <v-simple-table v-if="inputFilter.length>0" dense class="col-12">
                         <template v-slot:default>
                             <thead>
                                 <tr>
@@ -133,7 +133,7 @@ res = f.load_data()
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in dataset.foundry.keys" :key="item.key[0]">
+                                <tr v-for="item in inputFilter" :key="item.key[0]">
                                     <td>{{ item.key[0] }}</td>
                                     <td>{{ item.type }}</td>
                                     <td>{{ item.units }}</td>
@@ -142,6 +142,37 @@ res = f.load_data()
                             </tbody>
                         </template>
                     </v-simple-table>
+
+                    <h3 v-if="targetFilter.length>0">Target Keys</h3>
+                    <v-simple-table v-if="targetFilter.length>0" dense class="col-12">
+                        <template v-slot:default>
+                            <thead>
+                                <tr>
+                                    <th class="text-left">
+                                        Key
+                                    </th>
+                                    <th class="text-left">
+                                        Type
+                                    </th>
+                                    <th class="text-left">
+                                        Units
+                                    </th>
+                                    <th class="text-left">
+                                        Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in targetFilter" :key="item.key[0]">
+                                    <td>{{ item.key[0] }}</td>
+                                    <td>{{ item.type }}</td>
+                                    <td>{{ item.units }}</td>
+                                    <td>{{ item.description }}</td>
+                                </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table>
+
                     <h3>Splits</h3>
                     <v-simple-table dense class="col-12 mb-10">
                         <template v-slot:default>
@@ -239,6 +270,18 @@ export default {
         dataset: {},
         facets: { "tags": [] },
     }),
+    computed: {
+        inputFilter(){
+            return this.dataset.foundry.keys.filter((item) => {
+                return item.type === "input"
+            })
+        },
+        targetFilter(){
+            return this.dataset.foundry.keys.filter((item) => {
+                return item.type === "target"
+            })
+        }
+    }
 }
 
 
