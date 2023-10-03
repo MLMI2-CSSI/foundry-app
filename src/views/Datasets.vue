@@ -9,19 +9,44 @@
                     <v-text-field color="blue lighten-1" label="Search" placeholder="Search by title, doi, or author" v-model="input" outlined></v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="mx-10 mt-n8">
-                <v-toolbar>
+            <v-row class="mx-9 mt-n10" v-if="loaded===true">
+                <v-toolbar elevation="1" >
                     <div class="d-flex flex-column">
                         <p class="mb-0 pt-4 mx-3">
                             Years
                         </p>
                         <div class="d-flex flex-row">
-                        <div  v-for="year in itemYears" class="mx-3">
-                            <v-checkbox v-bind:label="year" v-bind:value="year" v-model="yearsInput">
-                            </v-checkbox>
-                        </div>
+                            <div  v-for="(year) in itemYears" class="mx-3">
+                                <v-checkbox v-bind:label="year" v-bind:value="year" v-model="yearsInput">
+                                </v-checkbox>
+                            </div>
                         </div>
                     </div>
+                    <v-spacer></v-spacer>
+                    <div class="d-flex flex-column">
+                        <p class="mb-0 pt-4 mx-3">
+                            Task Type
+                        </p>
+                        <div class="d-flex flex-row">
+                            <div  v-for="(type) in taskType" class="mx-3">
+                                <v-checkbox v-bind:label="type" v-bind:value="type" v-model="taskTypeInput">
+                                </v-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <div class="d-flex flex-column">
+                        <p class="mb-0 pt-4 mx-3">
+                            Data Type
+                        </p>
+                        <div class="d-flex flex-row">
+                            <div  v-for="(type) in dataType" class="mx-3">
+                                <v-checkbox v-bind:label="type" v-bind:value="type" v-model="dataTypeInput">
+                                </v-checkbox>
+                            </div>
+                        </div>
+                    </div>
+
                     
                 </v-toolbar>
             </v-row>
@@ -112,14 +137,13 @@
 <!-- This is where the dataset data will be loaded and put into the cards -->
 <script>
 import axios from 'axios';
+import { VSpacer } from 'vuetify/lib';
 
 export default {
     mounted() {
         var self = this;
-
         // Define the search endpoint and index
-        var ep = 'https://search.api.globus.org/v1/index/1a57bbe5-5272-477f-9d31-343b8258b7a5/search'
-
+        var ep = 'https://search.api.globus.org/v1/index/1a57bbe5-5272-477f-9d31-343b8258b7a5/search';
         // Format the POST query for Globus search
         // Facet
         var query = {
@@ -130,70 +154,64 @@ export default {
                 {
                     "name": "tags",
                     "field_name": "dc.subjects.subject",
-                    "type": "terms", //"date_histogram",
+                    "type": "terms",
                     "size": 20
                 }
             ]
-        }
-
+        };
         // Perform the POST request, and load the information into the Vue object
         axios
             .post(ep, query)
             .then(function (res) {
-                console.log("AXIOS POST")
-                console.log(res)
-                for (let i = 0; i < res.data.gmeta.length; i++) {
-                    // TODO, add more data into the view object for display
-                    var creators = res.data.gmeta[i].entries[0].content.dc.creators
-                    var authors = []
-                    var dataset_link = ""
-
-                    for (let j = 0; j < creators.length; j++) {
-                        authors.push(creators[j].creatorName)
-                    }
-
-                    console.log(res.data.gmeta[i].entries[0].content.dc.identifier)
-
-                    if (res.data.gmeta[i].entries[0].content.dc.identifier.identifier) {
-                        dataset_link = "/datasets/" + encodeURIComponent(res.data.gmeta[i].entries[0].content.dc.identifier.identifier)
-                    } else {
-                        dataset_link = "/datasets/" + res.data.gmeta[i].entries[0].content.mdf.source_id
-                    }
-
-                    self.items.push({
-                        "title": res.data.gmeta[i].entries[0].content.dc.titles[0].title,
-                        "foundry": res.data.gmeta[i].entries[0].content.projects.foundry,
-                        "dc": res.data.gmeta[i].entries[0].content.dc,
-                        "authors": authors,
-                        "to": dataset_link
-                    })
+            console.log("AXIOS POST");
+            console.log(res);
+            for (let i = 0; i < res.data.gmeta.length; i++) {
+                // TODO, add more data into the view object for display
+                var creators = res.data.gmeta[i].entries[0].content.dc.creators;
+                var authors = [];
+                var dataset_link = "";
+                for (let j = 0; j < creators.length; j++) {
+                    authors.push(creators[j].creatorName);
                 }
-
-                // Loop through the facet results from Globus Search, and put them 
-                // into the facets object
-                for (let j = 0; j < res.data.facet_results[0].buckets.length; j++) {
-                    self.facets.tags.push({
-                        "title": res.data.facet_results[0].buckets[j].value,
-                        "count": res.data.facet_results[0].buckets[j].count
-                    })
+                console.log(res.data.gmeta[i].entries[0].content.dc.identifier);
+                if (res.data.gmeta[i].entries[0].content.dc.identifier.identifier) {
+                    dataset_link = "/datasets/" + encodeURIComponent(res.data.gmeta[i].entries[0].content.dc.identifier.identifier);
                 }
-
-                // Push facet results into the searchTerms for display purposes
-                self.searchTerms.push({
-                    "icon": 'mdi-beaker-outline',
-                    "subterms": self.facets.tags,
-                    "title": 'Tag',
-                })
-                self.loaded=true
-
-
-            })
+                else {
+                    dataset_link = "/datasets/" + res.data.gmeta[i].entries[0].content.mdf.source_id;
+                }
+                self.items.push({
+                    "title": res.data.gmeta[i].entries[0].content.dc.titles[0].title,
+                    "foundry": res.data.gmeta[i].entries[0].content.projects.foundry,
+                    "dc": res.data.gmeta[i].entries[0].content.dc,
+                    "authors": authors,
+                    "to": dataset_link
+                });
+            }
+            // Loop through the facet results from Globus Search, and put them 
+            // into the facets object
+            for (let j = 0; j < res.data.facet_results[0].buckets.length; j++) {
+                self.facets.tags.push({
+                    "title": res.data.facet_results[0].buckets[j].value,
+                    "count": res.data.facet_results[0].buckets[j].count
+                });
+            }
+            // Push facet results into the searchTerms for display purposes
+            self.searchTerms.push({
+                "icon": 'mdi-beaker-outline',
+                "subterms": self.facets.tags,
+                "title": 'Tag',
+            });
+            self.loaded = true;
+        });
     },
     data: () => ({
         drawer: null,
         items: [],
         input: "",
-        yearsInput: ["2021", "2022", "2023"],
+        yearsInput: [],
+        taskTypeInput: [],
+        dataTypeInput: [],
         loaded: false,
         testCondition: false,
         facets: { "tags": [] },
@@ -240,31 +258,48 @@ export default {
         ],
     }),
     computed: {
-        filteredItems(){
-            if(this.input === ""){
+        filteredItems() {
+            if (this.input === "") {
                 return this.items.filter((item) => {
-                    return this.yearsInputComputed.includes(item.dc.dates[0].date.slice(0,4))
-                })
+                    return this.yearsInput.includes(item.dc.dates[0].date.slice(0, 4)) && this.taskTypeInput.includes(item.foundry.task_type[0]) && this.dataTypeInput.includes(item.foundry.data_type);
+                });
             }
             return this.items.filter((item) => {
-                return (item.title.toLowerCase().includes(this.input.toLowerCase()) || item.dc.identifier.identifier.toLowerCase().includes(this.input.toLowerCase()) || item.authors.map((author)=>author.toLowerCase()).filter((auth) => auth.includes(this.input.toLowerCase())).length != 0) && this.yearsInputComputed.includes(item.dc.dates[0].date.slice(0,4))
-            })
+                return (item.title.toLowerCase().includes(this.input.toLowerCase()) || item.dc.identifier.identifier.toLowerCase().includes(this.input.toLowerCase()) || item.authors.map((author) => author.toLowerCase()).filter((auth) => auth.includes(this.input.toLowerCase())).length != 0) && this.yearsInput.includes(item.dc.dates[0].date.slice(0, 4)) && this.taskTypeInput.includes(item.foundry.task_type[0]) && this.dataTypeInput.includes(item.foundry.data_type);
+            });
         },
-        filteredItemsLength(){
-            return this.filteredItems.length
+        filteredItemsLength() {
+            return this.filteredItems.length;
         },
-        itemYears(){
-            return this.items.map((item) => {
-                    return item.dc.dates[0].date.slice(0,4)
-                }).filter(function (value, index, arr) {
-                    return index == arr.indexOf(value);
-                }).sort();
-            
+        itemYears() {
+            let years = this.items.map((item) => {
+                return item.dc.dates[0].date.slice(0, 4);
+            }).filter(function (value, index, arr) {
+                return index === arr.indexOf(value);
+            }).sort();
+            this.yearsInput = years;
+            return years;
         },
-        yearsInputComputed(){
-            return this.yearsInput
+        taskType() {
+            let task = this.items.map((item) => {
+                return item.foundry.task_type[0];
+            }).filter(function (value, index, arr) {
+                return index === arr.indexOf(value);
+            });
+            this.taskTypeInput = task;
+            return task;
+        },
+        dataType() {
+            let data = this.items.map((item) => {
+                return item.foundry.data_type;
+            }).filter(function (value, index, arr) {
+                return index === arr.indexOf(value);
+            });
+            this.dataTypeInput = data;
+            return data;
         }
-    }
+    },
+    components: { VSpacer }
 }
 //authors and DOI
 </script>
