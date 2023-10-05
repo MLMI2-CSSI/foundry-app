@@ -4,15 +4,15 @@
             <v-row>
                 <h1 class="mx-6 mt-6">Datasets</h1>
             </v-row>
-            <v-row class="mx-6 mt-6">
+            <v-row no-gutters class="mx-auto mt-6">
                 <v-col>
                     <v-text-field color="blue lighten-1" label="Search" placeholder="Search by title, doi, or author" v-model="input" outlined></v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="mx-9 mt-n10" v-if="loaded===true">
-                <v-toolbar elevation="1" >
-                    <div class="d-flex flex-column">
-                        <p class="mb-0 pt-4 mx-3">
+            <v-row no-gutters class="mx-auto mt-n12 pt-6" v-if="loaded===true">
+                <v-card class="col-12 d-flex flex-wrap mt-n1" elevation="3">
+                    <v-col>
+                        <p class="mb-0  mx-3">
                             Years
                         </p>
                         <div class="d-flex flex-row">
@@ -21,34 +21,34 @@
                                 </v-checkbox>
                             </div>
                         </div>
-                    </div>
-                    <v-spacer></v-spacer>
-                    <div class="d-flex flex-column">
-                        <p class="mb-0 pt-4 mx-3">
+                    </v-col>
+                    
+                    <v-col>
+                        <p class="mb-0  mx-3">
                             Task Type
                         </p>
-                        <div class="d-flex flex-row">
+                        <div class="d-flex flex-row ">
                             <div  v-for="(type) in taskType" class="mx-3">
                                 <v-checkbox v-bind:label="type" v-bind:value="type" v-model="taskTypeInput">
                                 </v-checkbox>
                             </div>
                         </div>
-                    </div>
-                    <v-spacer></v-spacer>
-                    <div class="d-flex flex-column">
-                        <p class="mb-0 pt-4 mx-3">
+                    </v-col>
+
+                    <v-col>
+                        <p class="mb-0 mx-3">
                             Data Type
                         </p>
-                        <div class="d-flex flex-row">
+                        <div class="d-flex flex-row ">
                             <div  v-for="(type) in dataType" class="mx-3">
                                 <v-checkbox v-bind:label="type" v-bind:value="type" v-model="dataTypeInput">
                                 </v-checkbox>
                             </div>
                         </div>
-                    </div>
+                    </v-col>
 
-                    
-                </v-toolbar>
+                    </v-card>
+                
             </v-row>
             <v-row v-if="loaded===true">
                 <p class="mx-13 mb-n1 grey--text text--darken-2" >{{filteredItemsLength}} results</p>
