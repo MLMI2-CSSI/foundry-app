@@ -13,7 +13,7 @@
                 <v-card class="col-12 d-flex flex-wrap mt-n1" elevation="3">
                     <v-col>
                         <p class="mb-0  mx-3">
-                            Years
+                            Year
                         </p>
                         <div class="d-flex flex-row">
                             <div  v-for="(year) in itemYears" class="mx-3">
