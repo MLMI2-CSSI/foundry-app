@@ -147,7 +147,7 @@ export default {
         // Format the POST query for Globus search
         // Facet
         var query = {
-            "q": "(mdf.organizations:Foundry OR mdf.organization:Foundry) AND (mdf.resource_type:dataset)",
+            "q": "(mdf.organizations:Foundry) AND (mdf.resource_type:dataset)",
             "limit": 100,
             "advanced": true,
             "facets": [
