@@ -43,14 +43,14 @@
                             <h3><i class="mdi mdi-chart-bar red--text text--lighten-3"></i> Data Type</h3>
                             <p>{{ dataset.foundry.data_type }}</p>
                         </div>
-                        <div class="col-6">
+                        <div v-if="dataset.dc.dates" class="col-6">
                             <h3><i class="mdi mdi-calendar-star-outline red--text text--lighten-3"></i> Date Published
                             </h3>
                             <p>{{ dataset.dc.dates[0].date }} </p>
                         </div>
                     </v-row>
                     <v-row class="mt-0">
-                        <div class="col-6">
+                        <div v-if="dataset.foundry.n_items" class="col-6">
                             <h3><i class="mdi mdi-weight-kilogram red--text text--lighten-3"></i> Size</h3>
                             <p>{{ dataset.foundry.n_items }} items</p>
                         </div>

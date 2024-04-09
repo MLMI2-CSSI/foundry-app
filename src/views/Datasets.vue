@@ -92,7 +92,7 @@
                 <v-col>
                     <v-row>
                         <v-card elevation="3"  outlined class="mx-auto col-md-5 col-12 my-6"
-                            v-for="item in filteredItems" :key="item.title" :to="item.to" link>
+                            v-for="item, index in filteredItems" :key="item.title + index" :to="item.to" link>
                             <v-card-title class="white-text" style="word-break: keep-all;">{{ item.title }}</v-card-title>
                             <v-card-text>
                                 <div class="font-weight-medium">
@@ -147,7 +147,7 @@ export default {
         // Format the POST query for Globus search
         // Facet
         var query = {
-            "q": "(mdf.organizations:Foundry) AND (mdf.resource_type:dataset)",
+            "q": "(mdf.organizations:Foundry OR mdf.organization:Foundry) AND (mdf.resource_type:dataset)",
             "limit": 100,
             "advanced": true,
             "facets": [
@@ -164,7 +164,21 @@ export default {
             .post(ep, query)
             .then(function (res) {
             console.log("AXIOS POST");
-            console.log(res);
+            console.log(res.data.gmeta.length);
+            let fakeFoundry = {
+                "data_type": "data type",
+                "task_type": ["task type"],
+                "n_items": 100
+            }
+            let fakeDC = {
+                "identifier":{
+                    "identifier": "DOI HERE"
+                },
+                "dates":[
+                    {"date": "2022-07-19"}
+                ]
+
+            }
             for (let i = 0; i < res.data.gmeta.length; i++) {
                 // TODO, add more data into the view object for display
                 var creators = res.data.gmeta[i].entries[0].content.dc.creators;
@@ -173,7 +187,7 @@ export default {
                 for (let j = 0; j < creators.length; j++) {
                     authors.push(creators[j].creatorName);
                 }
-                console.log(res.data.gmeta[i].entries[0].content.dc.identifier);
+                console.log(i,"",res.data.gmeta[i]);
                 if (res.data.gmeta[i].entries[0].content.dc.identifier.identifier) {
                     dataset_link = "/datasets/" + encodeURIComponent(res.data.gmeta[i].entries[0].content.dc.identifier.identifier);
                 }
@@ -187,6 +201,13 @@ export default {
                     "authors": authors,
                     "to": dataset_link
                 });
+                // self.items.push({
+                //     "title": res.data.gmeta[i].entries[0].content.dc.titles[0].title, //WORKS
+                //     "foundry": res.data.gmeta[i].entries[0].content.projects.foundry, //WORKS
+                //     "dc": res.data.gmeta[i].entries[0].content.dc, //ERROR IN HERE
+                //     "authors": authors,
+                //     "to": dataset_link
+                // });
             }
             // Loop through the facet results from Globus Search, and put them 
             // into the facets object
@@ -261,7 +282,11 @@ export default {
         filteredItems() {
             if (this.input === "") {
                 return this.items.filter((item) => {
-                    return this.yearsInput.includes(item.dc.dates[0].date.slice(0, 4)) && this.taskTypeInput.includes(item.foundry.task_type[0]) && this.dataTypeInput.includes(item.foundry.data_type);
+                    if(item.dc.dates){
+                        return this.yearsInput.includes(item.dc.dates[0].date.slice(0, 4)) && this.taskTypeInput.includes(item.foundry.task_type[0]) && this.dataTypeInput.includes(item.foundry.data_type);
+                    }else{
+                        return this.taskTypeInput.includes(item.foundry.task_type[0]) && this.dataTypeInput.includes(item.foundry.data_type);
+                    }
                 });
             }
             return this.items.filter((item) => {
@@ -273,10 +298,19 @@ export default {
         },
         itemYears() {
             let years = this.items.map((item) => {
-                return item.dc.dates[0].date.slice(0, 4);
+                if(item.dc.dates){
+                    return item.dc.dates[0].date.slice(0, 4);
+                }
+                else{
+                    return ""
+                }
             }).filter(function (value, index, arr) {
                 return index === arr.indexOf(value);
             }).sort();
+            const index = years.indexOf("")
+            if(index>-1){
+                years.splice(index, 1)
+            }
             this.yearsInput = years;
             return years;
         },
