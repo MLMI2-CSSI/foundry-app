@@ -105,14 +105,14 @@
                                 </div>
                                 
                                 <div>
-                                    <v-chip class="ma-2" color="blue lighten-1" text-color="white">
+                                    <v-chip v-if="item.foundry.data_type" class="ma-2" color="blue lighten-1" text-color="white">
                                         {{ item.foundry.data_type }}
                                     </v-chip>
                                    
-                                    <v-chip class="ma-2" color="red lighten-2" text-color="white">
+                                    <v-chip v-if="item.foundry.task_type" class="ma-2" color="red lighten-2" text-color="white">
                                         {{ item.foundry.task_type[0] }}
                                     </v-chip>
-                                     <v-chip class="ma-2" color="indigo lighten-3" text-color="white">
+                                     <v-chip v-if="item.foundry.n_items" class="ma-2" color="indigo lighten-3" text-color="white">
                                         {{ item.foundry.n_items }} Items
                                     </v-chip>
                                 </div>
@@ -184,6 +184,10 @@ export default {
                 var creators = res.data.gmeta[i].entries[0].content.dc.creators;
                 var authors = [];
                 var dataset_link = "";
+                var foundry = {}
+                if(res.data.gmeta[i].entries[0].content.projects && res.data.gmeta[i].entries[0].content.projects.foundry){
+                    foundry = res.data.gmeta[i].entries[0].content.projects.foundry;
+                }
                 for (let j = 0; j < creators.length; j++) {
                     authors.push(creators[j].creatorName);
                 }
@@ -196,7 +200,7 @@ export default {
                 }
                 self.items.push({
                     "title": res.data.gmeta[i].entries[0].content.dc.titles[0].title,
-                    "foundry": res.data.gmeta[i].entries[0].content.projects.foundry,
+                    "foundry": foundry,
                     "dc": res.data.gmeta[i].entries[0].content.dc,
                     "authors": authors,
                     "to": dataset_link
@@ -282,10 +286,12 @@ export default {
         filteredItems() {
             if (this.input === "") {
                 return this.items.filter((item) => {
-                    if(item.dc.dates){
+                    if(item.dc.dates && item.foundry.task_type){
                         return this.yearsInput.includes(item.dc.dates[0].date.slice(0, 4)) && this.taskTypeInput.includes(item.foundry.task_type[0]) && this.dataTypeInput.includes(item.foundry.data_type);
-                    }else{
+                    }else if(item.foundry.task_type){
                         return this.taskTypeInput.includes(item.foundry.task_type[0]) && this.dataTypeInput.includes(item.foundry.data_type);
+                    }else{
+                        return true
                     }
                 });
             }
@@ -316,19 +322,35 @@ export default {
         },
         taskType() {
             let task = this.items.map((item) => {
-                return item.foundry.task_type[0];
+                if(item.foundry.task_type){
+                    return item.foundry.task_type[0];
+                }else{
+                    return ""
+                }
             }).filter(function (value, index, arr) {
                 return index === arr.indexOf(value);
             });
+            const index = task.indexOf("")
+            if(index>-1){
+                task.splice(index, 1)
+            }
             this.taskTypeInput = task;
             return task;
         },
         dataType() {
             let data = this.items.map((item) => {
-                return item.foundry.data_type;
+                if(item.foundry.data_type){
+                    return item.foundry.data_type;
+                }else{
+                    return ""
+                }
             }).filter(function (value, index, arr) {
-                return index === arr.indexOf(value);
+                return index === arr.indexOf(value) && value !== "";
             });
+            const index = data.indexOf("")
+            if(index>-1){
+                data.splice(index, 1)
+            }
             this.dataTypeInput = data;
             return data;
         }
