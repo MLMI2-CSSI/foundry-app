@@ -26,11 +26,11 @@
                     </div>
 
                     <v-row class="mt-0">
-                        <div class="col-6">
+                        <div v-if="dataset.foundry.domain" class="col-6">
                             <h3><i class="mdi mdi-beaker-outline red--text text--lighten-3"></i> Scientific Domain</h3>
                             <p>{{ dataset.foundry.domain[0] }} </p>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6" v-if="dataset.foundry.task_type">
                             <h3><i class="mdi mdi-run red--text text--lighten-3"></i> Associated Tasks</h3>
                             <v-chip color="indigo lighten-2" outlined class="mx-1"
                                 v-for="task in dataset.foundry.task_type" :key="task">
@@ -39,7 +39,7 @@
                         </div>
                     </v-row>
                     <v-row class="mt-0">
-                        <div class="col-6">
+                        <div v-if="dataset.foundry.data_type" class="col-6">
                             <h3><i class="mdi mdi-chart-bar red--text text--lighten-3"></i> Data Type</h3>
                             <p>{{ dataset.foundry.data_type }}</p>
                         </div>
@@ -173,8 +173,8 @@ res = f.load_data()
                         </template>
                     </v-simple-table>
 
-                    <h3>Splits</h3>
-                    <v-simple-table dense class="col-12 mb-10">
+                    <h3 v-if="dataset.foundry.splits">Splits</h3>
+                    <v-simple-table dense class="col-12 mb-10" v-if="dataset.foundry.splits">
                         <template v-slot:default>
                             <thead>
                                 <tr>
@@ -246,9 +246,13 @@ export default {
 
                 var creators = res.data.gmeta[0].entries[0].content.dc.creators
                 var authors = []
+                var foundry = {}
 
                 for (let i = 0; i < creators.length; i++) {
                     authors.push(creators[i].creatorName)
+                }
+                if(res.data.gmeta[0].entries[0].content.projects && res.data.gmeta[0].entries[0].content.projects.foundry){
+                    foundry = res.data.gmeta[0].entries[0].content.projects.foundry
                 }
 
                 // TODO, add more data into the view object for display
@@ -256,7 +260,7 @@ export default {
                     title: res.data.gmeta[0].entries[0].content.dc.titles[0].title,
                     authors: authors,
                     dc: res.data.gmeta[0].entries[0].content.dc,
-                    foundry: res.data.gmeta[0].entries[0].content.projects.foundry,
+                    foundry: foundry,
                     to: "/datasets/" + res.data.gmeta[0].entries[0].content.mdf.source_id,
                     data_info: res.data.gmeta[0].entries[0].content.data
                 }
@@ -272,14 +276,22 @@ export default {
     }),
     computed: {
         inputFilter(){
-            return this.dataset.foundry.keys.filter((item) => {
-                return item.type === "input"
-            })
+            if(this.dataset.foundry.keys){
+                return this.dataset.foundry.keys.filter((item) => {
+                    return item.type === "input"
+                })
+            }else{
+                return ""
+            }
         },
         targetFilter(){
-            return this.dataset.foundry.keys.filter((item) => {
-                return item.type === "target"
-            })
+            if(this.dataset.foundry.keys){
+                return this.dataset.foundry.keys.filter((item) => {
+                    return item.type === "target"
+                })
+            }else{
+                return ""
+            }
         }
     }
 }
