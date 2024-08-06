@@ -96,7 +96,7 @@ export default {
       { title: 'Home', icon: 'mdi-home', to: '/', target: '' },
       { title: 'Datasets', icon: 'mdi-magnify', to: '#/datasets', target: '' },
       { title: 'About', icon: 'mdi-chat-question', to: '#/about', target: '' },
-      { title: 'Documentation', icon: 'mdi-file-document-multiple-outline', to: 'https://ai-materials-and-chemistry.gitbook.io/foundry/v/docs/', target: 'blank' },
+      { title: 'Documentation', icon: 'mdi-file-document-multiple-outline', to: 'https://app.gitbook.com/o/-MW5XeB7GD8rLHu7Mw6m/s/W8sWGNr9ieTwuooWAs2R/loading-and-using/examples', target: 'blank' },
       { title: 'Examples', icon: 'mdi-rocket-launch', to: `https://github.com/MLMI2-CSSI/foundry/tree/main/examples`, target: 'blank' }
     ]
   }),
