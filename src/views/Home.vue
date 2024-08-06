@@ -48,8 +48,9 @@
           <vue-code-highlight language="python">
             <pre class="language-python">
 
-  f = f.load("foundry_stan_segmentation_v1.1")           
-  X,y = f.load_data()
+  dataset = f.get_dataset("foundry_stan_segmentation_v1.1")
+  dataset.get_as_dict()
+              
                     </pre>
           </vue-code-highlight>
           <v-sheet rounded color="white" elevation="20">
