@@ -73,8 +73,8 @@ from foundry import Foundry
 f = Foundry()
 
 # Load the data here!
-f.load('{{ dataset.dc.identifier.identifier }}', globus=False)
-res = f.load_data()
+dataset = f.get_dataset('{{ dataset.dc.identifier.identifier }}', globus=False)
+dataset.get_as_dict()
                      
  </pre>
                     </vue-code-highlight>
